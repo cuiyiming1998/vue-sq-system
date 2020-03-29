@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     data() {
         return {
@@ -36,30 +38,52 @@ export default {
                 // 对name进行验证
                 name: [
                     { required: true, message: '请输入用户名', trigger: 'blur' },
-                    { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+                    { min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur' }
                 ],
                 // 对password进行验证
                 password: [
                     { required: true, message: '请输入密码', trigger: 'blur' },
-                    { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
+                    { min: 5, max: 12, message: '长度在 5 到 12 个字符', trigger: 'blur' }
                 ],
             }
         }
     },
     methods: {
+        // 登录验证
         submitForm(formName){
+            // 需要用一个变量先保存this为VueComponent
+            // 否则无法在axios里使用this
+            const self = this;
             this.$refs[formName].validate((valid) => {
                 if (valid) {
-                    this.$message({
-                        message: '登录成功!',
-                        type: 'success'
+                    //格式验证成功，服务器请求数据
+                    axios({
+                        method: 'post',
+                        url: '/login',
+                        data:{
+                            username: self.form.name,
+                            password: self.form.password
+                        }
+                    }).then(function(res){
+                        if(res.data.code == 0){
+                            self.$router.push({path:'/'});
+                            self.$message({
+                                type: 'success',
+                                message: '登录成功！'
+                            })
+                        }else{
+                            self.$message.error('用户名或密码不正确！');
+                            self.form.name = '';
+                            self.form.password = '';
+                        }
+                    }).catch(function(error){
+                        console.log(error);
                     })
                 } else {
                     // 验证弹窗
                     this.$message.error('用户名或密码格式不正确！')
                     return false;
                 }
-                this.$router.push({path:'/'})
             });
         }
     }
