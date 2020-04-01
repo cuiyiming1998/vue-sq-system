@@ -33,6 +33,7 @@ export default {
             console.log(key, keyPath);
         },
         toLogin(){
+            //触发store中logout方法，清除本地存储状态
             this.$store.commit('logout');
             this.$message({
                 message: '退出登录成功',

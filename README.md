@@ -1,19 +1,7 @@
 # vue-aq-system
 
-## Project setup
-```
-npm install
-```
+调查问卷自动生成与分析系统
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## TODO 
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+问卷编辑，存储至数据库

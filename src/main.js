@@ -5,9 +5,14 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import './plugins/element.js'
+import animated from 'animate.css'
 
+// 使用Vuex
 Vue.use(Vuex);
+// 使用animated.css
+Vue.use(animated);
 
+//设置axios代理
 axios.defaults.baseURL = '/api';
 
 Vue.config.productionTip = false

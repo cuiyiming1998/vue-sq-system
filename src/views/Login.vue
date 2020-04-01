@@ -5,8 +5,8 @@
     </div>
     <div class="main-box">
         <div class="login-box">
-            <login-box v-if="isSignin"></login-box>
-            <signup-box v-else></signup-box>
+                <login-box v-if="isSignin" key="1"></login-box>
+                <signup-box v-else key="2"></signup-box>
         </div>
     </div>
 </div>
@@ -16,6 +16,7 @@
 import axios from 'axios'
 import LoginBox from '../components/LoginBox.vue'
 import SignupBox from '../components/SignupBox.vue'
+import 'animate.css'
 
 export default {
     data:()=>{
@@ -55,7 +56,7 @@ export default {
         flex-direction: row;
         width: 460px;
         max-width: 100%;
-        min-height: 500px;
+        min-height: 55vh;
     }
     .login-box{
         background: #fff;
