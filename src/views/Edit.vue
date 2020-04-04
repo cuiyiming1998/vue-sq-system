@@ -15,9 +15,6 @@
                             </div>
                             <!-- 选中单选框 -->
                             <div class="radio" v-if="questInfo[index].type == 'radio'">
-                                <!-- <el-radio class="radios" :type="item.type" v-for="(i,k) in item.answers" :key=k :label="k">
-                                    
-                                </el-radio> -->
                                 <div v-for="(i,k) in item.answers" :key=k >
                                     <input type="radio" disabled> 
                                     <input class="radios" type="text" v-model="questInfo[index].answers[k]">
@@ -62,21 +59,32 @@ export default {
     },
     methods:{
         showOpts: function(){
-            this.showOpt = true;
+            this.showOpt = !this.showOpt;
         },
         changeOpts: function(){
-            if(this.showOpt == true){
-                this.showOpt = false;
+            if(this.showOpt){
+                this.showOpt = !this.showOpt;
             }
         },
+        // 添加题目
         addOpts:function(type){
-            this.questInfo.push(
-                {
+            // 类型为单选或者多选
+            if(type == 'radio' || type == 'checkbox'){
+                this.questInfo.push(
+                    {
+                        questTitle: '请输入题目',
+                        type: type,
+                        answers:['选项1','选项2','选项3']
+                    }
+                )
+            }
+            // 类型是文本
+            else{
+                this.questInfo.push({
                     questTitle: '请输入题目',
-                    type: type,
-                    answers:['选项1','选项2','选项3']
-                }
-            )
+                    type: type
+                })
+            }
         }
     }
 }
