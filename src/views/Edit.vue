@@ -96,21 +96,32 @@ export default {
         },
         // 保存问卷
         saveQuest:function(){
+            let id = this.$route.params.id;
             if(this.projectName == ''){
                 this.$alert('请先输入问卷名称','问卷名称不能为空',{
                     confirmButtonText: '好'
                 })
-            }else{
-                window.localStorage.setItem(this.projectName,this.projectName);
-                window.localStorage.setItem(this.projectName+'Content',JSON.stringify(this.questInfo));
-                this.$store.commit('updateProjects',this.projectName);
+            }else if(id>=0){
+                window.localStorage.setItem(this.projectName,JSON.stringify(this.questInfo));
+                this.$store.commit('updateProjects',{
+                    code: 1,
+                    id: id,
+                    content: this.projectName
+                })
+            }
+            else{
+                window.localStorage.setItem(this.projectName,JSON.stringify(this.questInfo));
+                this.$store.commit('updateProjects',{
+                    code: 0,
+                    value: this.projectName
+                });
             }
         }
     },
     beforeMount:function(){
-        if(window.localStorage.getItem(this.projectName)){
-            this.projectName = window.localStorage.getItem(this.projectName);
-            this.questInfo = JSON.parse(window.localStorage.getItem(this.projectName+'Content'));
+        if(this.$route.params.id >= 0){
+            this.projectName = this.$store.state.projects[this.$route.params.id];
+            this.questInfo = JSON.parse(window.localStorage.getItem(this.projectName));
         }
     }
 }

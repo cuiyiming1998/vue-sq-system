@@ -8,7 +8,7 @@ const store = new Vuex.Store({
     // data
     state:{
         userInfo: JSON.parse(window.localStorage.getItem('userInfo')),
-        projects: JSON.parse(window.localStorage.getItem('projects'))
+        projects: []
     },
     // 计算属性
     getters:{
@@ -27,8 +27,19 @@ const store = new Vuex.Store({
             window.localStorage.removeItem('userInfo');
         },
         updateProjects:(state,value)=>{
-            state.projects.push(value);
-            window.localStorage.setItem('projects',JSON.stringify(state.projects));
+            console.log(value)
+            // 如果重新编辑
+            if(value.code == 1){
+                state.projects[value.id] = value.content;
+            }else{
+                state.projects.push(value.value)
+            }
+            window.localStorage.setItem('projects',JSON.stringify(state.projects))
+        },
+        fresh: (state)=>{
+            if(window.localStorage.getItem('projects')){
+                state.projects = JSON.parse(window.localStorage.getItem('projects'));
+            }
         }
     },
     // 异步方法

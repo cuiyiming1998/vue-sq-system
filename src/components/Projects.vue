@@ -1,13 +1,16 @@
 <template>
     <el-main>
         <div class="container">
-            <div class="projects">
+            <el-button class="projects" @click="newEdit">
                 <i class="el-icon-folder-add"></i>
                 <h2>创建新项目</h2>
-            </div>
-            <div class="projects" v-for="(item,index) in projects" :key = index>
-                {{ item }}
-            </div>
+            </el-button>
+            <el-button class="projects" v-for="(item,index) in projects" :key = index @click="toEdit(index)">
+                <i class="el-icon-edit-outline"></i>
+                <h2>
+                    {{ item }}
+                </h2>
+            </el-button>
         </div>
     </el-main>
 </template>
@@ -25,6 +28,19 @@ export default {
     computed: mapState([
         'projects'
     ]),
+    methods:{
+        newEdit:function(){
+            this.$router.push({path:'/edit'})
+        },
+        toEdit:function(index){
+            this.$router.push({
+                name: 'Edit',
+                params: {
+                    id: index
+                }
+            })
+        }
+    },
     beforeMount(){
         console.log(this.projects)
     }
@@ -56,7 +72,7 @@ export default {
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
-                .el-icon-folder-add{
+                i{
                     font-size: 4em;
                 }
             }

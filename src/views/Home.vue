@@ -28,7 +28,8 @@ export default {
     projects
   },
   beforeMount: function(){
-    if(this.$store.state.projects){
+    this.$store.commit('fresh');
+    if(this.$store.state.projects.length > 0){
       this.isSaved = true
     }
   }
