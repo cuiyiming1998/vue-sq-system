@@ -45,14 +45,14 @@ export default {
         },
         delProject:function(index,item){
             this.$store.commit('delProject',index);
-            console.log(this.$store.projects);
-            if(this.$store.projects == undefined){
+            if(JSON.parse(window.localStorage.getItem('projects')).length <1){
+                console.log(1)
                 this.$parent.isSaved = false;
             }
         },
     },
     beforeMount(){
-        
+
     }
 }
 </script>

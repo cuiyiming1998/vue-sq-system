@@ -108,13 +108,38 @@ export default {
                     id: id,
                     content: this.projectName
                 })
+                this.$message({
+                    message: '恭喜！保存成功！',
+                    type: 'success'
+                });
+                this.$router.go(-1);
             }
             else{
-                window.localStorage.setItem(this.projectName,JSON.stringify(this.questInfo));
-                this.$store.commit('updateProjects',{
-                    code: 0,
-                    value: this.projectName
-                });
+                let questList = this.$store.state.projects;
+                // 判断是是否有重复的名称
+                let same = false;
+                for(let i=0 ; i<=questList.length ; i++){
+                    if(this.projectName == questList[i]){
+                        this.$alert('名称不能相同','此名称已存在',{
+                            confirmButtonText: '好'
+                        })
+                        same = true;
+                        break;
+                    }
+                }
+                // 名称不重复，保存
+                if(same == false){
+                    window.localStorage.setItem(this.projectName,JSON.stringify(this.questInfo));
+                    this.$store.commit('updateProjects',{
+                        code: 0,
+                        value: this.projectName
+                    });
+                    this.$message({
+                        message: '恭喜！保存成功！',
+                        type: 'success'
+                    })
+                    this.$router.go(-1);
+                }
             }
         }
     },
