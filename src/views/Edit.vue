@@ -117,18 +117,12 @@ export default {
             else{
                 let questList = this.$store.state.projects;
                 // 判断是是否有重复的名称
-                let same = false;
-                for(let i=0 ; i<=questList.length ; i++){
-                    if(this.projectName == questList[i]){
-                        this.$alert('名称不能相同','此名称已存在',{
+                if(questList.includes(this.projectName)){
+                    this.$alert('名称不能相同','此名称已存在',{
                             confirmButtonText: '好'
                         })
-                        same = true;
-                        break;
-                    }
-                }
-                // 名称不重复，保存
-                if(same == false){
+                }else{
+                    // 名称不重复，保存
                     window.localStorage.setItem(this.projectName,JSON.stringify(this.questInfo));
                     this.$store.commit('updateProjects',{
                         code: 0,
