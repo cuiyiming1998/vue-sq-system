@@ -40,7 +40,7 @@ const store = new Vuex.Store({
             state.projects.splice(value,1);
             window.localStorage.setItem('projects',JSON.stringify(state.projects));
         },
-        // 刷新页面重新获取项目列表
+        // 刷新主页面重新获取项目列表
         fresh: (state)=>{
             if(window.localStorage.getItem('projects')){
                 state.projects = JSON.parse(window.localStorage.getItem('projects'));

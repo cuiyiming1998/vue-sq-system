@@ -55,8 +55,7 @@ export default {
         border-radius: 10px;
         flex-direction: row;
         width: 460px;
-        max-width: 100%;
-        min-height: 55vh;
+        min-height: 500px;
     }
     .login-box{
         background: #fff;

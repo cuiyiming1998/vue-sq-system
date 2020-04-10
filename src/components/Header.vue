@@ -8,11 +8,11 @@
             background-color="#545c64"
             text-color="#fff"
             active-text-color="#409eff">
-            <el-menu-item index="1">我的项目</el-menu-item>
+            <el-menu-item index="1" @click="toMain">我的项目</el-menu-item>
             <el-menu-item index="2">我的发布</el-menu-item>
             <el-menu-item index="3">回收站</el-menu-item>
             <el-menu-item index="4" disabled>消息中心</el-menu-item>
-            <el-menu-item index="5" class="rightBtn" @click="toLogin">退出登录</el-menu-item>
+            <el-menu-item index="5" class="rightBtn" @click="Logout">退出登录</el-menu-item>
         </el-menu>
     </el-header>
 </template>
@@ -29,7 +29,7 @@ export default {
         handleSelect(key, keyPath) {
             console.log(key, keyPath);
         },
-        toLogin(){
+        Logout(){
             //清除本地存储
             this.$store.commit('logout');
             this.$message({
@@ -37,6 +37,9 @@ export default {
                 type: 'success'
             })
             this.$router.push({path:'/login'})
+        },
+        toMain(){
+            this.$router.push({path: '/'})
         }
     },
     beforeMount:function(){
