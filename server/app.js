@@ -126,6 +126,7 @@ function get(sql,path){
 app.get('/square',function(req,res){
     const dataStr = ''
         pool.query('select * from projects',(err,results)=>{
+            results = results.reverse();
             res.send(results);
         })
 })
