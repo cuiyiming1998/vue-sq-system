@@ -131,6 +131,8 @@ app.post('/public',function(req,res){
         questInfo = JSON.parse(publicData.questInfo);
     })
     req.on('end',function(data){
+        var id = null;
+        var questLength = null;
         function insertProj(){
             return new Promise(function(resolve,reject){
                 sql = 'insert into projects(username,projectName,time) values(?,?,?)'
@@ -139,10 +141,6 @@ app.post('/public',function(req,res){
                     if(err){
                         console.log(err)
                     }else{
-                        res.send({
-                            code: 1,
-                            status: 'success'
-                        })
                         resolve(1);
                     }
                 })
@@ -150,14 +148,52 @@ app.post('/public',function(req,res){
         }
         insertProj()
         .then(()=>{
-            //插入成功后查询projectId，将问题存入questions表
+            //插入成功后查询projectId
             sql= 'select projectId from projects where username=? and projectName=?'
             pool.query(sql,[publicData.username,publicData.projectName],(err,results)=>{
                 if(err){
                     console.log(err);
                 }else{
+                    // 根据projectId将问题存入questions表
                     let result = toDataArr(results);
-                    let id = result[0].projectId;
+                    id = result[0].projectId;
+                    questLength = questInfo.length;
+                    sql = 'insert into questions(projectId,title) values(?,?)'
+                    for(let i=0;i<questLength;i++){
+                        pool.query(sql,[id,questInfo[i].questTitle],(err,results)=>{
+                            if(err){
+                                console.log(err)
+                                res.send({
+                                    code: 0,
+                                    status: 'error'
+                                })
+                            }else{
+                                // 查询questId
+                                sql = 'select questId from questions where projectId=? and title=?'
+                                pool.query(sql,[id,questInfo[i].questTitle],(err,results)=>{
+                                    let result = toDataArr(results);
+                                    let length = result.length;
+                                    // 通过questId将选项信息插入到options表
+                                    sql = 'insert into options(questId,type,options) values(?,?,?)';
+                                    for(let i=0;i<length;i++){
+                                        pool.query(sql,[result[i].questId,questInfo[i].type,JSON.stringify(questInfo[i].answers)],(err,results)=>{
+                                            if(err){
+                                                console.log(err)
+                                                res.send({
+                                                    code: 0,
+                                                    status: 'error'
+                                                })
+                                            }
+                                        })
+                                    }
+                                })
+                            }
+                        })
+                    }
+                    res.send({
+                        code: 1,
+                        status: 'success'
+                    })
                 }
             })
         })
