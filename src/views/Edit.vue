@@ -39,7 +39,7 @@
                 </div>
                 <div class="btns">
                     <el-button class="btn" @click="saveQuest">保存问卷</el-button>
-                    <el-button type="primary" class="btn publicBtn">发布问卷</el-button>
+                    <el-button type="primary" class="btn publicBtn" @click="publicQuest">发布问卷</el-button>
                 </div>
             </div>
         </div>
@@ -48,8 +48,10 @@
 
 <script>
 import headerCom from '../components/Header'
+import axios from 'axios'
 
 export default {
+    props:['id'],
     data:()=>{
         return{
             projectName: '',
@@ -135,6 +137,33 @@ export default {
                     this.$router.go(-1);
                 }
             }
+        },
+        // 发布问卷
+        publicQuest:function(){
+            let self = this;
+            let time = new Date();
+            axios({
+                method: 'post',
+                url: '/public',
+                data:{
+                    username: self.$store.state.userInfo.username,
+                    projectName: self.projectName,
+                    questInfo: JSON.stringify(self.questInfo),
+                    time: time.toLocaleString()
+                }
+            }).then(function(res){
+                if(res.data.code == 1){
+                    window.localStorage.removeItem(self.projectName);
+                    if(self.$route.params.id != undefined){
+                        self.$store.commit('delProject',self.$route.params.id);
+                    }
+                    self.$message({
+                        type: 'success',
+                        message: "发布成功！您可以到 '我的发布' 中查看你发布的问卷信息",
+                    })
+                    self.$router.push({path: '/'})
+                }
+            })
         }
     },
     beforeMount:function(){
@@ -155,6 +184,7 @@ export default {
         display: flex;
         justify-content: center;
         .editor{
+            background-color: white;
             width: 80vw;
             margin-top: 50px;
             border: 1px solid gray;

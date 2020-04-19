@@ -35,6 +35,26 @@ toDataArr = function(data){
     return String;
 }
 
+// get请求
+function get(sql,path){
+    app.get(path,(req,res)=>{
+        pool.query(sql,function(err,results){
+            if(err){
+                console.log(err);
+                res.send({
+                    code: 0,
+                    status: 'error'
+                })
+            }else{
+                res.send({
+                    code: 1,
+                    data: results
+                })
+            }
+        })
+    })
+}
+
 //登录验证
 app.post('/login',function(req,res){
     let loginData = '';
@@ -101,25 +121,48 @@ app.post('/signup',function(req,res){
     })
 })
 
-// get请求
-function get(sql,path){
-    app.get(path,(req,res)=>{
-        pool.query(sql,function(err,results){
-            if(err){
-                console.log(err);
-                res.send({
-                    code: 0,
-                    status: 'error'
+// 发布问卷
+app.post('/public',function(req,res){
+    let publicData = '';
+    let questInfo = ''
+    let sql = '';
+    req.on('data',function(data){
+        publicData = JSON.parse(data);
+        questInfo = JSON.parse(publicData.questInfo);
+    })
+    req.on('end',function(data){
+        function insertProj(){
+            return new Promise(function(resolve,reject){
+                sql = 'insert into projects(username,projectName,time) values(?,?,?)'
+                // 将用户名与时间插入projects表
+                pool.query(sql,[publicData.username,publicData.projectName,publicData.time],(err,results)=>{
+                    if(err){
+                        console.log(err)
+                    }else{
+                        res.send({
+                            code: 1,
+                            status: 'success'
+                        })
+                        resolve(1);
+                    }
                 })
-            }else{
-                res.send({
-                    code: 1,
-                    data: results
-                })
-            }
+            })
+        }
+        insertProj()
+        .then(()=>{
+            //插入成功后查询projectId，将问题存入questions表
+            sql= 'select projectId from projects where username=? and projectName=?'
+            pool.query(sql,[publicData.username,publicData.projectName],(err,results)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    let result = toDataArr(results);
+                    let id = result[0].projectId;
+                }
+            })
         })
     })
-}
+})
 
 // 获取所有问卷信息
 
@@ -130,5 +173,6 @@ app.get('/square',function(req,res){
             res.send(results);
         })
 })
+
 
 app.listen(3000);
