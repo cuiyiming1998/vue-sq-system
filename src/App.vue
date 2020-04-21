@@ -1,10 +1,12 @@
 <template>
   <div id="app">
       <router-view/>
-      <footer>
+      <el-container>
+      <el-footer>
         <p> 调查问卷自动生成与分析系统 </p>
         <p> Designed by cuiyiming1998</p>
-      </footer>
+      </el-footer>
+      </el-container>
   </div>
 </template>
 
@@ -20,7 +22,7 @@ export default {
 
 <style lang="scss">
 html,body,#app {
-  height: 100%;
+  min-height: 100%;
   padding: 0;
   margin: 0;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -40,8 +42,8 @@ html,body,#app {
     align-items: center;
     border-top: 1px solid #cccccc;
     color: #cccccc;
-    position: fixed;
-    bottom: 0;
+    margin-top: 100px;
+    z-index: 1;
     p{
       margin: 0;
       font-size: 0.6em;

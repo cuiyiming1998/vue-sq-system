@@ -115,7 +115,7 @@ export default {
         }
     }
     .tip{
-        height: calc(100vh - 71px);
+        height: calc(100vh - 231px);
         width: 100%;
         display: flex;
         flex-direction: column;

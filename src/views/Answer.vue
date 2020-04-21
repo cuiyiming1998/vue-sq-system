@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import headerCom from '../components/Header'
 
 export default {
@@ -21,7 +22,15 @@ export default {
         headerCom
     },
     beforeMount(){
-        console.log(this.projInfo)
+        let self = this;
+        axios({
+            method: 'get',
+            url: '/getProject',
+            params:{
+                username: self.projInfo.username,
+                projectName: self.projInfo.projectName
+            }
+        })
     }
 }
 </script>

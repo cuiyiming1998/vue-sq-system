@@ -152,7 +152,22 @@ export default {
                     time: time.toLocaleString()
                 }
             }).then(function(res){
-                if(res.data.code == 1){
+                if(res.data.code == 3){
+                    self.$message({
+                        type: 'warning',
+                        message: '请先填写问卷名哦！'
+                    })
+                }else if(res.data.code == 2){
+                    self.$message({
+                        type: 'warning',
+                        message: '问卷内容不能为空哦！'
+                    })
+                }else if(res.data.code == 0){
+                    self.$message({
+                        type: 'error',
+                        message: '服务器错误！请稍后再试'
+                    })
+                }else if(res.data.code == 1){
                     window.localStorage.removeItem(self.projectName);
                     if(self.$route.params.id != undefined){
                         self.$store.commit('delProject',self.$route.params.id);
@@ -285,6 +300,5 @@ export default {
             opacity: 1;
             margin: 0 10px;
         }
-        
     }
 </style>
