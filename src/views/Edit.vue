@@ -200,7 +200,7 @@ export default {
         justify-content: center;
         .editor{
             background-color: white;
-            width: 80vw;
+            width: 850px;
             margin-top: 50px;
             border: 1px solid gray;
             display: flex;
@@ -236,6 +236,7 @@ export default {
                         border: 0;
                         outline: none;
                         font-size: 1.2rem;
+                        width:90%;
                     }
                     #textQuest{
                         outline: none;
@@ -258,6 +259,7 @@ export default {
                         height: 40px;
                         line-height: 40px;
                         font-size: 1rem;
+                        width: 90%;
                     }
                 }
             }

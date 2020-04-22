@@ -270,7 +270,7 @@ app.get('/getProject',function(req,res){
                     status: 'error'
                 })
             }else{
-                result = toDataArr(results);
+                result = toDataArr(results).reverse();
                 // 将问题信息中的answer解析成字符串
                 for(let i=0;i<result.length;i++){
                     result[i].answers = JSON.parse(result[i].answers);
