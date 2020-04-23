@@ -234,6 +234,55 @@ app.post('/myPublic',function(req,res){
     })
 })
 
+// 删除已发布的问卷
+app.post('/deletePubProj',function(req,res){
+    let delData = '';
+    let sql = '';
+    let result = '';
+    req.on('data',function(data){
+        delData = JSON.parse(data)
+    })
+    req.on('end',function(){
+        // 删除projects表中信息
+        sql = 'delete from projects where projectId=?';
+        pool.query(sql,[delData.id],(err,results)=>{
+            if(err){
+                console.log(err);
+                res.send({
+                    code: 0,
+                    status: 'error'
+                })
+            }else{
+                // 删除questions表中问题信息
+                sql = 'delete from questions where projectId=?';
+                pool.query(sql,[delData.id],(err,results)=>{
+                    if(err){
+                        res.send({
+                            code: 0,
+                            status: 'error'
+                        })
+                    }else{
+                        sql = 'delete from answer where projectName=? and author=?';
+                        pool.query(sql,[delData.projectName,delData.username],(err,results)=>{
+                            if(err){
+                                res.send({
+                                    code: 0,
+                                    status: 'error'
+                                })
+                            }else{
+                                res.send({
+                                    code: 1,
+                                    status: 'success'
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    })
+})
+
 // 点击参加问卷获取问卷信息
 app.get('/getProject',function(req,res){
     let result = '';
@@ -281,6 +330,35 @@ app.get('/getProject',function(req,res){
                 statis: 'success',
                 questions: result
             });
+        })
+    })
+})
+
+// 提交问卷
+
+app.post('/submitAnswer',function(req,res){
+    let answerData = '';
+    let sql = ''
+    req.on('data',function(data){
+        answerData = JSON.parse(data);
+    })
+    req.on('end',function(data){
+        console.log(answerData.answer);
+        sql = 'insert into answer(author,projectName,questTitle,answer,username) values(?,?,?,?,?)'
+        for(let i=0;i<answerData.questions.length;i++){
+            pool.query(sql,[answerData.author,answerData.projectName,answerData.questions[i].title,JSON.stringify(answerData.answer[i]),answerData.username],(err,results)=>{
+                if(err){
+                    console.log(err);
+                    res.send({
+                        code: 0,
+                        status: 'error'
+                    })
+                }
+            })
+        }
+        res.send({
+            code: 1,
+            status: 'success'
         })
     })
 })

@@ -13,6 +13,7 @@
                             </span>
                         </div>
                         <div class="btn">
+                            <el-button type="danger" @click="deleteProj(item.projectName,index)" plain> 删除问卷 </el-button>
                             <el-button @click="toAnalyse(item.projectName)"> 查看结果 </el-button>
                         </div>
                     </div>
@@ -38,6 +39,7 @@ export default {
         }
     },
     methods:{
+        // 前往分析界面
         toAnalyse: function(projectName){
             this.$router.push({
                 path:'/analyse',
@@ -45,6 +47,30 @@ export default {
                     username: this.$store.state.userInfo.username,
                     projectName: projectName
                 }
+            })
+        },
+        // 删除发布的信息
+        deleteProj: function(name,index){
+            this.$confirm('确认要删除此已发布的问卷吗','提示',{
+                confirmButtonText: '是',
+                cancelButtonText: '再想想',
+                type: 'warning'
+            }).then(()=>{
+                let self = this;
+                axios({
+                    method: 'post',
+                    url: '/deletePubProj',
+                    data:{
+                        id: self.projects[index].projectId,
+                        username: self.$store.state.userInfo.username,
+                        projectName: name
+                    }
+                }).then((res)=>{
+                    self.projects.splice(index,1);
+                    if(self.projects.length == 0){
+                        self.isPublic = false;
+                    }
+                })
             })
         }
     },
@@ -67,7 +93,7 @@ export default {
                 self.isPublic = false;
             }
         })
-    }
+    },
 }
 </script>
 
