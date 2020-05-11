@@ -2,7 +2,7 @@
     <div class="container">
         <header-com :active="2"></header-com>
         <div class="main">
-            <div class="questions" id="questions">
+            <div class="questions" id="pdfDom">
                 <div class="title">
                     <h1> {{projInfo.projectName}} 的调查结果</h1>
                 </div>
@@ -42,7 +42,7 @@
                 </ul>
             </div>
             <div class="save-to-pdf">
-                <el-button type='success' @click="getPdf('questions',projInfo.projectName + '的调查结果')">将此问卷的结果保存到本地</el-button>
+                <el-button type='success' @click="getPdf()">将此问卷的结果保存到本地</el-button>
             </div>
         </div>
         <footer-com></footer-com>
@@ -69,6 +69,9 @@ export default {
         footerCom
     },
     computed:{
+        htmlTitle(){
+            return this.projInfo.projectName + '的调查结果'
+        }
     },
     methods:{
         percentage(num,index){

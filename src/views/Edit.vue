@@ -2,13 +2,13 @@
     <div>
         <header-com :active="1"></header-com>
         <div class="edit">
-            <div class="editor">
+            <div class="editor" id="editor">
                 <!-- 保存至PDF的部分 -->
-                <div class="questions" id="questions">
+                <div class="questions" id="pdfDom">
                     <div class="header">
                         <input type="text" class="title" placeholder="问卷题目" v-model="projectName">
                     </div>
-                    <div class="main">
+                    <div class="main" id="main">
                         <ul class="questList" v-if="questInfo.length != 0">
                             <li v-for="(item,index) in questInfo" :key=index class="quests">
                                 <div class="title">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
                 <div class="btns">
-                    <el-button @click="getPdf('questions',projectName)">将问卷另存为PDF</el-button>
+                    <el-button @click="getPdf()">将问卷另存为PDF</el-button>
                     <el-button class="btn" @click="saveQuest">保存问卷</el-button>
                     <el-button type="primary" class="btn publicBtn" @click="publicQuest">发布问卷</el-button>
                 </div>
@@ -69,7 +69,16 @@ export default {
             isSaved: false, // 用户是否保存
             projectNameCopy : '',
             questInfoCopy: [],  //判断用户是否编辑
+            count: 0,
         }
+    },
+    computed:{
+        htmlTitle(){
+            return this.projectName
+        }
+    },
+    updated(){
+        this.count++;
     },
     components:{
         headerCom,
@@ -88,9 +97,16 @@ export default {
         addOpts:function(type){
             // 类型为单选或者多选
             if(type == 'radio' || type == 'checkbox'){
+                let typeZN = ''
+                if (type == 'radio'){
+                    typeZN = '单选'
+                }
+                if(type == 'checkbox'){
+                    typeZN = '多选'
+                }
                 this.questInfo.push(
                     {
-                        questTitle: '请输入题目',
+                        questTitle: '请输入题目'+`（${typeZN}）`,
                         type: type,
                         answers:['选项1','选项2','选项3']
                     }
@@ -216,16 +232,14 @@ export default {
     beforeMount:function(){
         if(this.$route.params.id >= 0){
             this.projectName = this.$store.state.projects[this.$route.params.id];
-            this.projectNameCopy = this.projectName;
             this.questInfo = JSON.parse(window.localStorage.getItem(this.projectName));
-            this.questInfoCopy = this.questInfo;
         }
     },
     // 未保存询问是否立即退出
     beforeRouteLeave (to, from, next) {
         const tip = '当前页面未保存，是否继续退出？'
         // 如果无编辑，直接返回
-        if(this.projectNameCopy == this.projectName && this.questInfoCopy == this.questInfo){
+        if(this.count == 0){
             next();
         }else if(this.isSaved == false){
             // 未保存，询问
